@@ -19,6 +19,7 @@
                 <outlet property="ACLModeMenuItem" destination="Yub-b0-bni" id="e0w-Td-aE9"/>
                 <outlet property="RunningStatusMenuItem" destination="fzk-mE-CEV" id="R4x-gK-Qcw"/>
                 <outlet property="ShowNetworkSpeedItem" destination="a3h-uQ-DuO" id="OLq-K8-rEO"/>
+                <outlet property="advPreferencesMenuItem" destination="bZ3-fy-34d" id="7eY-wp-puv"/>
                 <outlet property="autoModeMenuItem" destination="r07-Gu-aEz" id="9aH-pQ-Rgi"/>
                 <outlet property="checkUpdateAtLaunchMenuItem" destination="3nJ-zQ-Agj" id="bbR-eO-uCo"/>
                 <outlet property="checkUpdateMenuItem" destination="wyZ-4G-qg9" id="Sva-xA-VQY"/>
@@ -27,9 +28,12 @@
                 <outlet property="copyHttpProxyExportCmdLineMenuItem" destination="gM9-ym-4L0" id="62x-pY-NaN"/>
                 <outlet property="editSubscribeMenuItem" destination="QJ6-eg-mzv" id="KC0-uH-8q0"/>
                 <outlet property="exportAllServerProfileItem" destination="6k0-gn-DQv" id="1xA-cd-5Ia"/>
+                <outlet property="feedbackMenuItem" destination="W7u-7g-Gv4" id="4K3-TW-6va"/>
                 <outlet property="globalModeMenuItem" destination="Mw3-Jm-eXA" id="ar5-Yx-3ze"/>
                 <outlet property="importBunchJsonFileItem" destination="T9g-gy-gvv" id="GW7-ii-U1j"/>
                 <outlet property="lanchAtLoginMenuItem" destination="eUq-p7-ICK" id="w4p-0c-DZn"/>
+                <outlet property="loginMenu" destination="i9o-IJ-TM6" id="Sce-JI-bZ7"/>
+                <outlet property="logoutMenu" destination="HwD-Gl-5bz" id="DsD-Zi-Ynp"/>
                 <outlet property="manualModeMenuItem" destination="8PR-gs-c5N" id="9qz-mU-5kt"/>
                 <outlet property="manualUpdateSubscribeMenuItem" destination="NnE-Ad-1An" id="2Vf-Br-EnF"/>
                 <outlet property="pingserverMenuItem" destination="zfR-Jt-GmS" id="Gjs-bY-0tm"/>
@@ -56,6 +60,18 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="toggleRunning:" target="Voe-Tx-rLC" id="EvE-23-Wiv"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Login" id="i9o-IJ-TM6">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="loginWindow:" target="Voe-Tx-rLC" id="AwF-7z-oOd"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Logout" id="HwD-Gl-5bz">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="logoutButton:" target="Voe-Tx-rLC" id="U0H-Nw-N6g"/>
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="LXP-yK-yQu"/>
@@ -135,6 +151,9 @@
                     </menu>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="WcX-Th-4eP"/>
+                <menuItem title="The servers are below:" id="Rqv-vH-XP8">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
                 <menuItem title="Servers" id="u5M-hQ-VSc">
                     <modifierMask key="keyEquivalentModifierMask" shift="YES"/>
                     <menu key="submenu" title="Servers" id="9Y1-db-3HK">
@@ -209,7 +228,7 @@
                         <action selector="showSpeedTap:" target="Voe-Tx-rLC" id="8Zp-lV-yLN"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Ping server" id="zfR-Jt-GmS">
+                <menuItem title="Ping Test" id="zfR-Jt-GmS">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="doPingTest:" target="Voe-Tx-rLC" id="rRs-7S-tvD"/>

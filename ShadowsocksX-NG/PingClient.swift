@@ -155,8 +155,8 @@ class PingServers:NSObject{
                     self.fastest_id  = min.0
 
                     let notice = NSUserNotification()
-                    notice.title = "Ping测试完成！最快\(self.SerMgr.profiles[self.fastest_id].latency!)ms"
-                    notice.subtitle = "最快的是\(self.SerMgr.profiles[self.fastest_id].serverHost) \(self.SerMgr.profiles[self.fastest_id].remark)"
+                    notice.title = "Ping test : the fastest:\(self.SerMgr.profiles[self.fastest_id].latency!)ms"
+                    notice.subtitle = "The fastest is  \(self.SerMgr.profiles[self.fastest_id].remark)"
                     
                     NSUserNotificationCenter.default.deliver(notice)
                 }

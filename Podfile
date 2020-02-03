@@ -8,7 +8,8 @@ target 'ShadowsocksX-NG' do
   # Pods for ShadowsocksX-NG
   pod 'Alamofire', '~> 5.0.0-rc.2'
   pod 'GCDWebServer', '~> 3.0'
-
+  pod 'SwiftyJSON', '~> 4.0'
+  
   target 'ShadowsocksX-NGTests' do
     inherit! :search_paths
     # Pods for testing

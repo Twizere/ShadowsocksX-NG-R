@@ -8,7 +8,7 @@
 
 import Foundation
 
-let _VERSION_XML_URL = "https://raw.githubusercontent.com/wzdnzd/ShadowsocksX-NG-R/develop/ShadowsocksX-NG/Info.plist"
+let _VERSION_XML_URL = "https://gitee.com/pacitwizere/AGAKOTI-APP-UPDATOR/raw/master/mac-updator.plist"
 let _VERSION_XML_LOCAL:String = Bundle.main.bundlePath + "/Contents/Info.plist"
 
 class VersionChecker: NSObject {
@@ -105,25 +105,25 @@ class VersionChecker: NSObject {
             
             if buildString == currentBuildString {
 
-                subtitle = "当前版本 " + currentVersionString + " build " + currentBuildString
+                subtitle = "Current version is " + currentVersionString + " build " + currentBuildString
                 return ["newVersion" : false,
                         "error": "",
-                        "Title": "已是最新版本！",
+                        "Title": "You have the latest version！",
                         "SubTitle": subtitle,
-                        "ConfirmBtn": "确认",
+                        "ConfirmBtn": "OK",
                         "CancelBtn": ""
                 ]
             }
             else {
                 haveNewVersion = true
                 
-                subtitle = "新版本为 " + versionString + " build " + buildString + "\n" + "当前版本 " + currentVersionString + " build " + currentBuildString
+                subtitle = "New version is  " + versionString + " build " + buildString + "\n" + "This version is " + currentVersionString + " build " + currentBuildString
                 return ["newVersion" : true,
                         "error": "",
-                        "Title": "软件有更新！",
+                        "Title": "Update found！",
                         "SubTitle": subtitle,
-                        "ConfirmBtn": "前往下载",
-                        "CancelBtn": "取消"
+                        "ConfirmBtn": "Download",
+                        "CancelBtn": "Cancel"
                 ]
             }
         }
@@ -146,22 +146,22 @@ class VersionChecker: NSObject {
             for i in 0...(currentVersionArr.count - 1) {
                 if versionArr[i] > currentVersionArr[i] {
                     haveNewVersion = true
-                    subtitle = "新版本为 " + versionString + " build " + buildString + "\n" + "当前版本 " + currentVersionString + " build " + currentBuildString
+                    subtitle = "New version is  " + versionString + " build " + buildString + "\n" + "This version is " + currentVersionString + " build " + currentBuildString
                     return ["newVersion" : true,
                             "error": "",
-                            "Title": "软件有更新！",
+                            "Title": "Update found！",
                             "SubTitle": subtitle,
-                            "ConfirmBtn": "前往下载",
-                            "CancelBtn": "取消"
+                            "ConfirmBtn": "Download",
+                            "CancelBtn": "Cancel"
                     ]
                 }
             }
-            subtitle = "当前版本 " + currentVersionString + " build " + currentBuildString + "\n" + "远端版本 " + versionString + " build " + buildString
+            subtitle = "Current version " + currentVersionString + " build " + currentBuildString + "\n" + "remote version" + versionString + " build " + buildString
             return ["newVersion" : false,
                     "error": "",
-                    "Title": "已是最新版本！",
+                    "Title": "You have the latest version！",
                     "SubTitle": subtitle,
-                    "ConfirmBtn": "确认",
+                    "ConfirmBtn": "OK",
                     "CancelBtn": ""
             ]
         }

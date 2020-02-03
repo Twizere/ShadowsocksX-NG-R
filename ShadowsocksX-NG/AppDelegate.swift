@@ -18,6 +18,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
     var advPreferencesWinCtrl: AdvPreferencesWindowController!
     var proxyPreferencesWinCtrl: ProxyPreferencesController!
     var editUserRulesWinCtrl: UserRulesController!
+    var loginWinCtrl: LoginWindowController!
     var httpPreferencesWinCtrl : HTTPPreferencesWindowController!
     var subscribePreferenceWinCtrl: SubscribePreferenceWindowController!
     var toastWindowCtrl: ToastWindowController!
@@ -29,6 +30,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
     @IBOutlet weak var statusMenu: NSMenu!
     
     @IBOutlet weak var runningStatusMenuItem: NSMenuItem!
+    
+    @IBOutlet weak var loginMenu: NSMenuItem!
+    
+    @IBOutlet weak var logoutMenu: NSMenuItem!
     @IBOutlet weak var toggleRunningMenuItem: NSMenuItem!
     @IBOutlet weak var proxyMenuItem: NSMenuItem!
     @IBOutlet weak var autoModeMenuItem: NSMenuItem!
@@ -60,6 +65,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
     @IBOutlet var editSubscribeMenuItem: NSMenuItem!
     
     @IBOutlet weak var copyCommandLine: NSMenuItem!
+    
+    //Added menu for hiding puprose
+    @IBOutlet weak var advPreferencesMenuItem: NSMenuItem!
+    @IBOutlet weak var feedbackMenuItem: NSMenuItem!
+    
     
     
     // MARK: Variables
@@ -103,6 +113,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
             "ACLFileName": "chn.acl",
             "Subscribes": [],
             "AutoUpdateSubscribe":false,
+            //Added for API purpose
+            "token": "",
+            "userid":-1,
+            "username":"",
         ])
 
         setUpMenu(defaults.bool(forKey: "enable_showSpeed"))
@@ -120,6 +134,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
                 self.applyConfig()
                 self.updateCopyHttpProxyExportMenu()
             }
+            
         )
         notifyCenter.addObserver(forName: NSNotification.Name(rawValue: NOTIFY_SERVER_PROFILES_CHANGED), object: nil, queue: nil
             , using: {
@@ -199,6 +214,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
             , andSelector: #selector(self.handleURLEvent)
             , forEventClass: AEEventClass(kInternetEventClass), andEventID: AEEventID(kAEGetURL))
         
+        
         updateMainMenu()
         updateCopyHttpProxyExportMenu()
         updateServersMenu()
@@ -208,7 +224,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
         ProxyConfHelper.install()
         applyConfig()
 //        SyncSSLocal()
-
+        hideUnwantedMenu()
+        updateServers()
         if defaults.bool(forKey: "ConnectAtLaunch") && ServerProfileManager.instance.getActiveProfileId() != "" {
             defaults.set(false, forKey: "ShadowsocksOn")
             toggleRunning(toggleRunningMenuItem)
@@ -266,7 +283,39 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
         }
 
     }
-    
+    func logout(){
+        let defaults = UserDefaults.standard
+        let token = defaults.string(forKey: "token")
+        
+        if(token=="" && ServerProfileManager.instance.getActiveProfileId()==""){
+            print("Nothing to do , You are not logged in")
+        }else{
+            print("Logging out...")
+            defaults.set("", forKey: "token")
+            ServerProfileManager.instance.profiles.removeAll();
+            NotificationCenter.default
+            .post(name: Notification.Name(rawValue: NOTIFY_SERVER_PROFILES_CHANGED), object: nil)
+            print("logged out");
+            //disconnecting
+            defaults.set(true, forKey: "ShadowsocksOn")
+            toggleRunning(toggleRunningMenuItem)
+            
+            openLoginWindow();
+            
+        }
+    }
+    func openLoginWindow(){
+        if loginWinCtrl != nil {
+            loginWinCtrl.close()
+        }
+        let ctrl = LoginWindowController(windowNibName: "LoginWindowController")
+        loginWinCtrl = ctrl
+        LoginWindowController.instance=ctrl
+        
+        ctrl.showWindow(self)
+        NSApp.activate(ignoringOtherApps: true)
+        ctrl.window?.makeKeyAndOrderFront(self)
+    }
     // MARK: Mainmenu functions
     
     @IBAction func toggleRunning(_ sender: NSMenuItem) {
@@ -277,7 +326,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
         SyncSSLocal()
         applyConfig()
     }
-
+    @IBAction func loginWindow(_ sender: NSMenuItem) {
+        openLoginWindow()
+    }
+    
+    @IBAction func logoutButton(_ sender: Any) {
+        
+        logout()
+        
+    }
+    
+    
+    
     @IBAction func updateGFWList(_ sender: NSMenuItem) {
         UpdatePACFromGFWList()
     }
@@ -608,8 +668,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
     }
     
     @IBAction func showAbout(_ sender: NSMenuItem) {
-        NSApp.orderFrontStandardAboutPanel(sender);
-        NSApp.activate(ignoringOtherApps: true)
+        NSWorkspace.shared.open(URL(string: "http://www.agakoti.com")!)
+//        NSApp.orderFrontStandardAboutPanel(sender);
+//        NSApp.activate(ignoringOtherApps: true)
     }
     
     func updateLaunchAtLoginMenu() {
@@ -710,20 +771,81 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
             statusItem?.length = titleWidth + imageWidth
         }
     }
-    
+    func loginCheck(){
+        let defaults = UserDefaults.standard
+        let token = defaults.string(forKey: "token")
+        
+        if(token=="" ){
+            //  not logged in
+            print("Is not  Logged in")
+            
+            //Hide the logout button
+            loginMenu.isHidden=false
+            logoutMenu.isHidden=true;
+            
+            logout()
+            //Disable Connect and Disconnect button
+            toggleRunningMenuItem.isHidden=true;
+            
+        }else{
+            // logged in
+             print("Is  Logged in")
+            //Hide the login button
+             loginMenu.isHidden=true
+             logoutMenu.isHidden=false;
+            
+            //Enable Connect and Disconnect button
+            toggleRunningMenuItem.isHidden=false;
+            
+            
+        }
+    }
+    func updateServers(){
+        let defaults = UserDefaults.standard
+               let token = defaults.string(forKey: "token")
+               
+               if(token != "" ){
+                BASEAPI.getServers(token:token!)
+                }
+    }
+    func  hideUnwantedMenu()  {
+        whiteListModeMenuItem.isHidden = true
+        manualModeMenuItem.isHidden = true
+        ACLModeMenuItem.isHidden = true
+        
+        //servers menu
+        editSubscribeMenuItem.isHidden=true
+    updateSubscribeAtLaunchMenuItem.isHidden=true
+        manualModeMenuItem.isHidden = true
+        showQRCodeMenuItem.isHidden = true
+        scanQRCodeMenuItem.isHidden = true
+        importBunchJsonFileItem.isHidden = true
+    copyHttpProxyExportCmdLineMenuItem.isHidden=true
+        showBunchJsonExampleFileItem.isHidden=true
+        exportAllServerProfileItem.isHidden=true
+        serversPreferencesMenuItem.isHidden=true
+        manualUpdateSubscribeMenuItem.isHidden = true
+        
+       //Other Menus
+        advPreferencesMenuItem.isHidden=true;
+        feedbackMenuItem.isHidden=true;
+        
+        
+        
+    }
     func updateMainMenu() {
         let defaults = UserDefaults.standard
         let isOn = defaults.bool(forKey: "ShadowsocksOn")
         var image = NSImage()
         if isOn {
-            runningStatusMenuItem.title = "Shadowsocks: On".localized
-            toggleRunningMenuItem.title = "Turn Shadowsocks Off".localized
+            runningStatusMenuItem.title = "Agakoti VPN: On".localized
+            toggleRunningMenuItem.title = "Turn Agakoti VPN Off".localized
             //image = NSImage(named: "menu_icon")!
             copyCommandLine.isHidden = false
             updateStatusItemUI()
         } else {
-            runningStatusMenuItem.title = "Shadowsocks: Off".localized
-            toggleRunningMenuItem.title = "Turn Shadowsocks On".localized
+            runningStatusMenuItem.title = "Agakoti VPN: Off".localized
+            toggleRunningMenuItem.title = "Turn Agakoti VPN On".localized
             image = NSImage(named: "menu_icon_disabled")!
             image.isTemplate = true
             copyCommandLine.isHidden = true
@@ -736,6 +858,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
         ShowNetworkSpeedItem.state          = NSControl.StateValue(rawValue: defaults.bool(forKey: "enable_showSpeed") ? 1 : 0)
         connectAtLaunchMenuItem.state       = NSControl.StateValue(rawValue: defaults.bool(forKey: "ConnectAtLaunch")  ? 1 : 0)
         checkUpdateAtLaunchMenuItem.state   = NSControl.StateValue(rawValue: defaults.bool(forKey: "AutoCheckUpdate")  ? 1 : 0)
+        loginCheck();
     }
     
     func updateCopyHttpProxyExportMenu() {
@@ -869,7 +992,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
                     let alertResult = versionChecker.showAlertView(Title: newVersion["Title"] as! String, SubTitle: newVersion["SubTitle"] as! String, ConfirmBtn: newVersion["ConfirmBtn"] as! String, CancelBtn: newVersion["CancelBtn"] as! String)
                     print(alertResult)
                     if (newVersion["newVersion"] as! Bool && alertResult == 1000){
-                        NSWorkspace.shared.open(URL(string: "https://github.com/wzdnzd/ShadowsocksX-NG-R/releases")!)
+                        NSWorkspace.shared.open(URL(string: "http://www.agakoti.com/#Downloads")!)
                     }
                 }
             }
