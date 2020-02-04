@@ -17,7 +17,7 @@
                BlueprintIdentifier = "9B3FFF431D09CD3B0019A709"
                BuildableName = "proxy_conf_helper"
                BlueprintName = "proxy_conf_helper"
-               ReferencedContainer = "container:ShadowsocksX-NG.xcodeproj">
+               ReferencedContainer = "container:Agakoti-Mac.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,7 +33,7 @@
             BlueprintIdentifier = "9B3FFF431D09CD3B0019A709"
             BuildableName = "proxy_conf_helper"
             BlueprintName = "proxy_conf_helper"
-            ReferencedContainer = "container:ShadowsocksX-NG.xcodeproj">
+            ReferencedContainer = "container:Agakoti-Mac.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
@@ -56,7 +56,7 @@
             BlueprintIdentifier = "9B3FFF431D09CD3B0019A709"
             BuildableName = "proxy_conf_helper"
             BlueprintName = "proxy_conf_helper"
-            ReferencedContainer = "container:ShadowsocksX-NG.xcodeproj">
+            ReferencedContainer = "container:Agakoti-Mac.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <CommandLineArguments>
@@ -79,7 +79,7 @@
             BlueprintIdentifier = "9B3FFF431D09CD3B0019A709"
             BuildableName = "proxy_conf_helper"
             BlueprintName = "proxy_conf_helper"
-            ReferencedContainer = "container:ShadowsocksX-NG.xcodeproj">
+            ReferencedContainer = "container:Agakoti-Mac.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

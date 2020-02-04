@@ -11,11 +11,12 @@ import Alamofire
 import SwiftyJSON
 
  class BASEAPI{
+    static var loginWinCtrl: LoginWindowController!
     
     static var SEVER_ADD = "http://panel.agakoti.com"
     static var LOGIN = "/api/token"
     static var TOKEN_INFO = "/api/token/%@"
-    static var GET_SERVERS = "/api/node?access_token=%@"
+    static var GET_SERVERS = "/api/node?access_token=%@&type=ssr"
     static var GET_C0NFIGURATIONS = "/api/configuration"
     
     
@@ -34,7 +35,7 @@ import SwiftyJSON
         }
         
         
-        AF.request(url, method: .post, parameters: ["email":account,"passwd":pwd])
+        AF.request(url, method: .post, parameters: ["email":account,"passwd":pwd, "device":"macbook", "app_version":"1.0"])
         .responseJSON { response in
             if response.data != nil {
                 
@@ -44,12 +45,14 @@ import SwiftyJSON
                         
                         let userid = Int(json["data"]["userId"].stringValue)
                         let username = json["data"]["fullname"]
+                        let email = json["data"]["email"]
                         let token = json["data"]["token"]
                         
                         //Saving all the information
                         UserDefaults.standard.set(token.stringValue as String, forKey: "token")
                         UserDefaults.standard.set(userid , forKey: "userid")
                         UserDefaults.standard.set(username.stringValue as String, forKey: "username")
+                        UserDefaults.standard.set(email.stringValue as String, forKey: "email")
                         print("Login successfully")
                         
                         login = true;
@@ -71,7 +74,7 @@ import SwiftyJSON
                    
                     //Notfy login Window
                      let loginWindow = LoginWindowController.instance
-                   if(loginWindow != nil){ loginWindow?.finishedLogin(isLogin:login,msg:ret_msg)
+                   if(loginWindow != nil){ loginWindow?.finishedLogin(isLogin:login, serversLoaded: false, msg:ret_msg)
                    }
                 }
             }
@@ -119,7 +122,7 @@ import SwiftyJSON
                 do{
                       let json = try JSON(data: response.data!)
                     if(json["ret"]==1){
-                       
+                       print(json["data"])
                        //Saving the Servers
                       let profileMgr = ServerProfileManager.instance
                         profileMgr.profiles.removeAll()
@@ -137,7 +140,7 @@ import SwiftyJSON
                         //Notfy login Window
                         let loginWindow = LoginWindowController.instance
                        
-                        if(loginWindow != nil){ loginWindow?.finishedLogin(isLogin:true,msg:"Logged in succesfully")
+                        if(loginWindow != nil){ loginWindow?.finishedLogin(isLogin:true, serversLoaded: true, msg:"Logged in succesfully")
                         }
                         
                         print("Got the servers")
@@ -145,9 +148,32 @@ import SwiftyJSON
                     }else{
                         
                         print("Failed to get Servers")
+                      
+                    //Notify Login
+                      let loginWindow = LoginWindowController.instance
+                                              
+                       if(loginWindow != nil){ loginWindow?.finishedLogin(isLogin:false, serversLoaded: false, msg:"Failed to get Servers")
+                       }
+                        // If Login again is needed || Token is expired
+                        if(json["msg"].stringValue.contains("token is null")){
+                            print("Login again")
+                            
+                            //delete all servers
+                            
+                            NotificationCenter.default
+                            .post(name: Notification.Name(rawValue: LOGOUT_NEEDED), object: nil)
+                            
+                            
+                            
+                        }
                     }
                 }catch{
                     print("Error getting servers" )
+                    //Notify Login
+                    let loginWindow = LoginWindowController.instance
+                                            
+                     if(loginWindow != nil){ loginWindow?.finishedLogin(isLogin:false, serversLoaded: false, msg:"Error getting servers")
+                     }
                 }
                 
             }
@@ -162,6 +188,7 @@ import SwiftyJSON
         server.serverPort = UInt16(object["server_port"].intValue)
         server.method = object["method"].stringValue
         server.ssrProtocol = object["protocol"].stringValue
+        server.ssrProtocolParam = object["protocol_param"].stringValue
         server.ssrObfs = object["obfs"].stringValue
         server.ssrObfsParam = object["obfsparam"].stringValue
         server.password = object["password"].stringValue
@@ -176,6 +203,8 @@ import SwiftyJSON
     
         return server;
     }
+    
+    
     
     
 }

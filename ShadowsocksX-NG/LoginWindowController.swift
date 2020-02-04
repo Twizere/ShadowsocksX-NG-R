@@ -16,11 +16,12 @@ class LoginWindowController: NSWindowController {
     @IBOutlet weak var pwdView: NSSecureTextFieldCell!
     @IBOutlet weak var loginButton: NSButton!
     
-    @IBOutlet weak var msgView: NSTextField!
+    @IBOutlet weak var redMsgView: NSTextField!
     
+    @IBOutlet weak var greenMsgView: NSTextField!
     override func windowDidLoad() {
         super.windowDidLoad()
-        msgView.stringValue = ""
+        redMsgView.stringValue = ""
         // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
         
     }
@@ -43,23 +44,30 @@ class LoginWindowController: NSWindowController {
     }
 
     func doLogin(){
-        msgView.stringValue = ""
+        redMsgView.stringValue = ""
         BASEAPI.Login(email: emailView.stringValue, pwd: pwdView.stringValue)
         
     }
-    func finishedLogin(isLogin : Bool, msg:String) {
+    func finishedLogin(isLogin : Bool, serversLoaded : Bool, msg:String) {
+       //Cleaning the message
+        redMsgView.stringValue = ""
+        greenMsgView.stringValue = ""
         
         print(msg);
         if(!isLogin){
           shakeWindows()
-            msgView.stringValue = msg
+            redMsgView.stringValue = msg
         }else{
+            if(!serversLoaded){
+            greenMsgView.stringValue = msg + ", Loading locations ..."
+            }else{
             let notice = NSUserNotification()
             notice.title = "Agakoti"
             notice.subtitle = "Brovo, Logged in successfully"
             
             NSUserNotificationCenter.default.deliver(notice)
             window?.performClose(self)
+            }
         }
     }
     
@@ -89,4 +97,12 @@ class LoginWindowController: NSWindowController {
         window?.animator().setFrameOrigin(window!.frame.origin)
     }
     
+    @IBAction func forgotPassword(_ sender: Any) {
+    
+ NSWorkspace.shared.open(URL(string: "http://www.agakoti.com/password/reset")!)
+    }
+    @IBAction func openRegister(_ sender: Any) {
+     NSWorkspace.shared.open(URL(string: "http://www.agakoti.com/auth/register")!)
+        
+    }
 }

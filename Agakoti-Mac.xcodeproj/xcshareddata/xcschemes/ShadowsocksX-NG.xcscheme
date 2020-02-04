@@ -85,9 +85,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9B0BFFE41D0460A70040E62B"
-               BuildableName = "ShadowsocksX-NG.app"
-               BlueprintName = "ShadowsocksX-NG"
-               ReferencedContainer = "container:ShadowsocksX-NG.xcodeproj">
+               BuildableName = "Agakoti-Mac.app"
+               BlueprintName = "Agakoti-Mac"
+               ReferencedContainer = "container:Agakoti-Mac.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -101,9 +101,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9B0BFFE41D0460A70040E62B"
-            BuildableName = "ShadowsocksX-NG.app"
-            BlueprintName = "ShadowsocksX-NG"
-            ReferencedContainer = "container:ShadowsocksX-NG.xcodeproj">
+            BuildableName = "Agakoti-Mac.app"
+            BlueprintName = "Agakoti-Mac"
+            ReferencedContainer = "container:Agakoti-Mac.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
@@ -112,9 +112,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9B0BFFF31D0460A70040E62B"
-               BuildableName = "ShadowsocksX-NGTests.xctest"
-               BlueprintName = "ShadowsocksX-NGTests"
-               ReferencedContainer = "container:ShadowsocksX-NG.xcodeproj">
+               BuildableName = "Agakoti-MacTests.xctest"
+               BlueprintName = "Agakoti-MacTests"
+               ReferencedContainer = "container:Agakoti-Mac.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -134,9 +134,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9B0BFFE41D0460A70040E62B"
-            BuildableName = "ShadowsocksX-NG.app"
-            BlueprintName = "ShadowsocksX-NG"
-            ReferencedContainer = "container:ShadowsocksX-NG.xcodeproj">
+            BuildableName = "Agakoti-Mac.app"
+            BlueprintName = "Agakoti-Mac"
+            ReferencedContainer = "container:Agakoti-Mac.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -151,9 +151,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9B0BFFE41D0460A70040E62B"
-            BuildableName = "ShadowsocksX-NG.app"
-            BlueprintName = "ShadowsocksX-NG"
-            ReferencedContainer = "container:ShadowsocksX-NG.xcodeproj">
+            BuildableName = "Agakoti-Mac.app"
+            BlueprintName = "Agakoti-Mac"
+            ReferencedContainer = "container:Agakoti-Mac.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

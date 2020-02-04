@@ -34,6 +34,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
     @IBOutlet weak var loginMenu: NSMenuItem!
     
     @IBOutlet weak var logoutMenu: NSMenuItem!
+    
+    @IBOutlet weak var accountTitleMenuItem: NSMenuItem!
+    
+    @IBOutlet weak var emailMenuItem: NSMenuItem!
+    @IBOutlet weak var usernameMenuItem: NSMenuItem!
     @IBOutlet weak var toggleRunningMenuItem: NSMenuItem!
     @IBOutlet weak var proxyMenuItem: NSMenuItem!
     @IBOutlet weak var autoModeMenuItem: NSMenuItem!
@@ -117,6 +122,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
             "token": "",
             "userid":-1,
             "username":"",
+            "email":"",
         ])
 
         setUpMenu(defaults.bool(forKey: "enable_showSpeed"))
@@ -209,6 +215,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
             }
         }
         
+        //NEEDED LOGOUT
+        notifyCenter.addObserver(forName: NSNotification.Name(rawValue: LOGOUT_NEEDED), object: nil, queue: nil
+                   , using: {
+                       (note) in
+                    self.logout()
+                   }
+               )
         // Handle ss url scheme
         NSAppleEventManager.shared().setEventHandler(self
             , andSelector: #selector(self.handleURLEvent)
@@ -774,6 +787,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
     func loginCheck(){
         let defaults = UserDefaults.standard
         let token = defaults.string(forKey: "token")
+        let username = defaults.string(forKey: "username")
+        let email = defaults.string(forKey: "email")
         
         if(token=="" ){
             //  not logged in
@@ -783,6 +798,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
             loginMenu.isHidden=false
             logoutMenu.isHidden=true;
             
+            //Hide the Account information
+            accountTitleMenuItem.isHidden = true
+            usernameMenuItem.isHidden = true
+            emailMenuItem.isHidden = true
+
             logout()
             //Disable Connect and Disconnect button
             toggleRunningMenuItem.isHidden=true;
@@ -794,6 +814,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
              loginMenu.isHidden=true
              logoutMenu.isHidden=false;
             
+            //Show the Account information
+               usernameMenuItem.title =  username!
+               emailMenuItem.title =  email!
+               accountTitleMenuItem.isHidden = false
+               usernameMenuItem.isHidden = false
+               emailMenuItem.isHidden = false
+
             //Enable Connect and Disconnect button
             toggleRunningMenuItem.isHidden=false;
             
@@ -818,7 +845,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
     updateSubscribeAtLaunchMenuItem.isHidden=true
         manualModeMenuItem.isHidden = true
         showQRCodeMenuItem.isHidden = true
-        scanQRCodeMenuItem.isHidden = true
+       scanQRCodeMenuItem.isHidden = true
         importBunchJsonFileItem.isHidden = true
     copyHttpProxyExportCmdLineMenuItem.isHidden=true
         showBunchJsonExampleFileItem.isHidden=true
@@ -827,6 +854,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
         manualUpdateSubscribeMenuItem.isHidden = true
         
        //Other Menus
+        ShowNetworkSpeedItem.isHidden = true
         advPreferencesMenuItem.isHidden=true;
         feedbackMenuItem.isHidden=true;
         
@@ -838,14 +866,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
         let isOn = defaults.bool(forKey: "ShadowsocksOn")
         var image = NSImage()
         if isOn {
-            runningStatusMenuItem.title = "Agakoti VPN: On".localized
-            toggleRunningMenuItem.title = "Turn Agakoti VPN Off".localized
+            runningStatusMenuItem.title = "Agakoti VPN: Connected".localized
+            toggleRunningMenuItem.title = "Disconnect".localized
             //image = NSImage(named: "menu_icon")!
             copyCommandLine.isHidden = false
             updateStatusItemUI()
         } else {
-            runningStatusMenuItem.title = "Agakoti VPN: Off".localized
-            toggleRunningMenuItem.title = "Turn Agakoti VPN On".localized
+            runningStatusMenuItem.title = "Agakoti VPN: Disconnected".localized
+            toggleRunningMenuItem.title = "Connect".localized
             image = NSImage(named: "menu_icon_disabled")!
             image.isTemplate = true
             copyCommandLine.isHidden = true
